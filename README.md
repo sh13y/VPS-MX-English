@@ -74,6 +74,14 @@ If you find this project helpful, consider buying me a coffee! Your support help
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20Development-ff5e5b?style=for-the-badge&logo=ko-fi)](https://ko-fi.com/shiey)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-yellow?style=for-the-badge&logo=buy-me-a-coffee)](https://buymeacoffee.com/shiey)
 
+## 👏 Credits
+
+This project is an English translation and modification of the original VPS-MX script created by [@NetVPS](https://github.com/NetVPS). The original repository can be found at [VPS-MX_Oficial](https://github.com/NetVPS/VPS-MX_Oficial).
+
+Special thanks to:
+- [@NetVPS](https://github.com/NetVPS) - Original script creator
+- All contributors to the original project
+
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
