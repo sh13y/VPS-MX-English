@@ -31,7 +31,7 @@
  [[ -d $HOME/socks ]] && rm -rf $HOME/socks > /dev/null 2>&1
  cd $HOME && mkdir socks > /dev/null 2>&1
  cd socks
- patch="https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/LINKS-LIBRERIAS/backsocz.zip"
+ patch="https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/libraries/backsocz.zip"
  arq="backsocz"
  wget $patch -o /dev/null
  unzip $arq > /dev/null 2>&1
@@ -56,12 +56,12 @@
  done <<< "$(mportas)"
  screen -dmS getpy python ${SCPinst}/PGet.py -b "0.0.0.0:$1" -p "${SCPinst}/pwd.pwd"
   [[ "$(ps x | grep "PGet.py" | grep -v "grep" | awk -F "pts" '{print $1}')" ]] && {
-  echo -e "$(fun_trans  "Gettunel Iniciado con Sucesso")"
+  echo -e "$(fun_trans  "Gettunel Started Successfully")"
   msg -bar
-  echo -ne "$(fun_trans  "Su contraseña Gettunel es"):"
+  echo -ne "$(fun_trans  "Your Gettunel password is"):"
   echo -e "\033[1;32m NetVPS"
   msg -bar
-  } || echo -e "$(fun_trans  "Gettunel no fue iniciado")"
+  } || echo -e "$(fun_trans  "Gettunel was not started")"
   msg -bar
  }
  
@@ -72,7 +72,7 @@
  apt-get install python -y 
  apt-get install python pip -y
  }
- ins &>/dev/null && echo -e "INSTALANDO FIX" | pv -qL 40
+ ins &>/dev/null && echo -e "INSTALLING FIX" | pv -qL 40
  sleep 1.s
  [[ ! -e /etc/VPS-MX/fix ]] && touch /etc/VPS-MX/fix
  else

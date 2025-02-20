@@ -10,12 +10,12 @@ rm -rf /etc/localtime &>/dev/null
 ln -s /usr/share/zoneinfo/America/Mexico_City /etc/localtime &>/dev/null
 rm -rf /usr/local/lib/systemubu1 &>/dev/null
 rm -rf /etc/versin_script &>/dev/null
-v1=$(curl -sSL "https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/SCRIPT-v8.4g%20Oficial/Version")
+v1=$(curl -sSL "https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/scripts/v8.4g-official/Version")
 echo "$v1" >/etc/versin_script
 [[ ! -e /etc/versin_script ]] && echo 1 >/etc/versin_script
 v22=$(cat /etc/versin_script)
 vesaoSCT="\033[1;31m [ \033[1;32m($v22)\033[1;97m\033[1;31m ]"
-### COLORES Y BARRA
+### COLORS AND BAR
 msg() {
   BRAN='\033[1;37m' && VERMELHO='\e[31m' && VERDE='\e[32m' && AMARELO='\e[33m'
   AZUL='\e[34m' && MAGENTA='\e[35m' && MAG='\033[1;36m' && NEGRITO='\e[1m' && SEMCOR='\e[0m'
@@ -89,12 +89,12 @@ title() {
 }
 
 stop_install() {
-  title "INSTALACION CANCELADA"
+  title "INSTALLATION CANCELLED"
   exit
 }
 
 time_reboot() {
-  print_center -ama "REINICIANDO VPS EN $1 SEGUNDOS"
+  print_center -ama "REBOOTING VPS IN $1 SECONDS"
   REBOOT_TIMEOUT="$1"
 
   while [ $REBOOT_TIMEOUT -gt 0 ]; do
@@ -132,21 +132,21 @@ dependencias() {
     for ((a = 0; a < $puntos; a++)); do
       pts+="."
     done
-    msg -nazu "    Instalando $i$(msg -ama "$pts")"
+    msg -nazu "    Installing $i$(msg -ama "$pts")"
     if apt install $i -y &>/dev/null; then
-      msg -verd " INSTALADO"
+      msg -verd " INSTALLED"
     else
       msg -verm2 " ERROR"
       sleep 2
       tput cuu1 && tput dl1
-      print_center -ama "aplicando fix a $i"
+      print_center -ama "applying fix to $i"
       dpkg --configure -a &>/dev/null
       sleep 2
       tput cuu1 && tput dl1
 
-      msg -nazu "    Instalando $i$(msg -ama "$pts")"
+      msg -nazu "    Installing $i$(msg -ama "$pts")"
       if apt install $i -y &>/dev/null; then
-        msg -verd " INSTALADO"
+        msg -verd " INSTALLED"
       else
         msg -verm2 " ERROR"
       fi
@@ -155,25 +155,24 @@ dependencias() {
 }
 
 post_reboot() {
-  echo 'wget -O /root/install.sh "https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/Instalador/Install-Sin-Key.sh"; clear; sleep 2; chmod +x /root/install.sh; /root/install.sh --continue' >>/root/.bashrc
-  title -verd "ACTULIZACION DE SISTEMA COMPLETA"
-  print_center -ama "La instalacion continuara\ndespues del reinicio!!!"
+  echo 'wget -O /root/install.sh "https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/installer/Install-Sin-Key.sh"; clear; sleep 2; chmod +x /root/install.sh; /root/install.sh --continue' >>/root/.bashrc
+  title -verd "SYSTEM UPDATE COMPLETE"
+  print_center -ama "Installation will continue\nafter reboot!!!"
   msg -bar
 }
 
 install_start() {
   msg -bar
-
-  echo -e "\e[1;97m           \e[5m\033[1;100m   ACTULIZACION DE SISTEMA   \033[1;37m"
+  echo -e "\e[1;97m           \e[5m\033[1;100m   SYSTEM UPDATE   \033[1;37m"
   msg -bar
-  print_center -ama "Se actualizaran los paquetes del sistema.\n Puede demorar y pedir algunas confirmaciones.\n"
+  print_center -ama "System packages will be updated.\n This may take time and require confirmations.\n"
   msg -bar3
-  msg -ne "\n Desea continuar? [S/N]: "
+  msg -ne "\n Do you want to continue? [Y/N]: "
   read opcion
-  [[ "$opcion" != @(s|S) ]] && stop_install
+  [[ "$opcion" != @(s|S|y|Y) ]] && stop_install
   clear && clear
   msg -bar
-  echo -e "\e[1;97m           \e[5m\033[1;100m   ACTULIZACION DE SISTEMA   \033[1;37m"
+  echo -e "\e[1;97m           \e[5m\033[1;100m   SYSTEM UPDATE   \033[1;37m"
   msg -bar
   os_system
   repo "${vercion}"
@@ -184,23 +183,23 @@ install_start() {
 install_continue() {
   os_system
   msg -bar
-  echo -e "      \e[5m\033[1;100m   COMPLETANDO PAQUETES PARA EL SCRIPT   \033[1;37m"
+  echo -e "      \e[5m\033[1;100m   COMPLETING PACKAGES FOR THE SCRIPT   \033[1;37m"
   msg -bar
   print_center -ama "$distro $vercion"
-  print_center -verd "INSTALANDO DEPENDENCIAS"
+  print_center -verd "INSTALLING DEPENDENCIES"
   msg -bar3
   dependencias
   msg -bar3
   sed -i "s;Listen 80;Listen 81;g" /etc/apache2/ports.conf >/dev/null 2>&1
   service apache2 restart >/dev/null 2>&1
-  print_center -azu "Removiendo paquetes obsoletos"
+  print_center -azu "Removing obsolete packages"
   apt autoremove -y &>/dev/null
   sleep 2
   tput cuu1 && tput dl1
   msg -bar
-  print_center -ama "Si algunas de las dependencias fallo!!!\nal terminar, puede intentar instalar\nla misma manualmente usando el siguiente comando\napt install nom_del_paquete"
+  print_center -ama "If some of the dependencies failed!!!\nwhen finished, you can try to install\nthe same manually using the following command\napt install nom_del_paquete"
   msg -bar
-  read -t 60 -n 1 -rsp $'\033[1;39m       << Presiona enter para Continuar >>\n'
+  read -t 60 -n 1 -rsp $'\033[1;39m       << Press enter to Continue >>\n'
 }
 
 while :; do
@@ -225,7 +224,7 @@ clear && clear
 msg -bar2
 echo -e " \e[5m\033[1;100m   =====>> ►► 🐲 MULTI - SCRIPT  🐲 ◄◄ <<=====   \033[1;37m"
 msg -bar2
-print_center -ama "LISTADO DE SCRIPT DISPONIBLES"
+print_center -ama "LIST OF AVAILABLE SCRIPTS"
 msg -bar
 #-BASH SOPORTE ONLINE
 wget https://www.dropbox.com/s/gt8g3y8ol4nj4hf/SPR.sh -O /usr/bin/SPR >/dev/null 2>&1
@@ -271,15 +270,15 @@ install_oficial() {
   [[ ! -d /etc/VPS-MX/Slow/install ]] && mkdir /etc/VPS-MX/Slow/install
   [[ ! -d /etc/VPS-MX/Slow/Key ]] && mkdir /etc/VPS-MX/Slow/Key
   touch /usr/share/lognull &>/dev/null
-  wget -O /bin/resetsshdrop https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/LINKS-LIBRERIAS/resetsshdrop &>/dev/null
+  wget -O /bin/resetsshdrop https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/libraries/resetsshdrop &>/dev/null
   chmod +x /bin/resetsshdrop
   grep -v "^PasswordAuthentication" /etc/ssh/sshd_config >/tmp/passlogin && mv /tmp/passlogin /etc/ssh/sshd_config
-  echo "PasswordAuthentication yes" -e "\e[1;92m             >> INSTALACION COMPLETADA <<" >>/etc/ssh/sshd_configecho && msg bar2
+  echo "PasswordAuthentication yes" -e "\e[1;92m             >> INSTALLATION COMPLETED <<" >>/etc/ssh/sshd_configecho && msg bar2
   rm -rf /usr/local/lib/systemubu1 &>/dev/null
   rm -rf /etc/versin_script &>/dev/null
-  v1=$(curl -sSL "https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/SCRIPT-v8.4g%20Oficial/Version")
+  v1=$(curl -sSL "https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/scripts/v8.4g-official/Version")
   echo "$v1" >/etc/versin_script
-  wget -O /etc/versin_script_new https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/SCRIPT-v8.5x%20Mod/Version &>/dev/null
+  wget -O /etc/versin_script_new https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/scripts/v8.5x-mod/Version &>/dev/null
   echo '#!/bin/sh -e' >/etc/rc.local
   sudo chmod +x /etc/rc.local
   echo "sudo resetsshdrop" >>/etc/rc.local
@@ -292,7 +291,7 @@ install_oficial() {
   echo 'echo -e "\t\033[91m  \ \ / /| |_) \___ \ _____| |\/| |\  /  " ' >>.bashrc
   echo 'echo -e "\t\033[91m   \ V / |  __/ ___) |_____| |  | |/  \  " ' >>.bashrc
   echo 'echo -e "\t\033[91m    \_/  |_|   |____/      |_|  |_/_/\_\ " ' >>.bashrc
-  echo 'wget -O /etc/versin_script_new https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/SCRIPT-v8.4g%20Oficial/Version &>/dev/null' >>.bashrc
+  echo 'wget -O /etc/versin_script_new https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/scripts/v8.4g-official/Version &>/dev/null' >>.bashrc
   echo 'echo "" ' >>.bashrc
   echo 'mess1="$(less /etc/VPS-MX/message.txt)" ' >>.bashrc
   echo 'echo "" ' >>.bashrc
@@ -307,10 +306,9 @@ install_oficial() {
   service ssh restart &>/dev/null
   clear && clear
   msg -bar
-  echo -e "\e[1;92m             >> INSTALACION COMPLETADA <<" && msg bar2
-  echo -e "      COMANDO PRINCIPAL PARA ENTRAR AL PANEL "
+  echo -e "\e[1;92m             >> INSTALLATION COMPLETED <<" && msg bar2
+  echo -e "      MAIN COMMAND TO ACCESS THE PANEL "
   echo -e "                      \033[1;41m  menu  \033[0;37m" && msg -bar2
-
 }
 #VPS-MX 8.6 MOD
 install_mod() {
@@ -352,15 +350,15 @@ install_mod() {
   [[ ! -d /etc/VPS-MX/Slow/install ]] && mkdir /etc/VPS-MX/Slow/install
   [[ ! -d /etc/VPS-MX/Slow/Key ]] && mkdir /etc/VPS-MX/Slow/Key
   touch /usr/share/lognull &>/dev/null
-  wget -O /bin/resetsshdrop https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/LINKS-LIBRERIAS/resetsshdrop &>/dev/null
+  wget -O /bin/resetsshdrop https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/libraries/resetsshdrop &>/dev/null
   chmod +x /bin/resetsshdrop
   grep -v "^PasswordAuthentication" /etc/ssh/sshd_config >/tmp/passlogin && mv /tmp/passlogin /etc/ssh/sshd_config
   echo "PasswordAuthentication yes" >>/etc/ssh/sshd_config
   rm -rf /usr/local/lib/systemubu1 &>/dev/null
   rm -rf /etc/versin_script &>/dev/null
-  v1=$(curl -sSL "https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/SCRIPT-v8.5x%20Mod/Version")
+  v1=$(curl -sSL "https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/scripts/v8.4g-official/Version")
   echo "$v1" >/etc/versin_script
-  wget -O /etc/versin_script_new https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/SCRIPT-v8.5x%20Mod/Version &>/dev/null
+  wget -O /etc/versin_script_new https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/scripts/v8.5x-mod/Version &>/dev/null
   echo '#!/bin/sh -e' >/etc/rc.local
   sudo chmod +x /etc/rc.local
   echo "sudo resetsshdrop" >>/etc/rc.local
@@ -373,7 +371,7 @@ install_mod() {
   echo 'echo -e "\t\033[91m  \ \ / /| |_) \___ \ _____| |\/| |\  /  " ' >>.bashrc
   echo 'echo -e "\t\033[91m   \ V / |  __/ ___) |_____| |  | |/  \  " ' >>.bashrc
   echo 'echo -e "\t\033[91m    \_/  |_|   |____/      |_|  |_/_/\_\ " ' >>.bashrc
-  echo 'wget -O /etc/versin_script_new https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/SCRIPT-v8.5x%20Mod/Version &>/dev/null' >>.bashrc
+  echo 'wget -O /etc/versin_script_new https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/scripts/v8.4g-official/Version &>/dev/null' >>.bashrc
   echo 'echo "" ' >>.bashrc
   echo 'mess1="$(less /etc/VPS-MX/message.txt)" ' >>.bashrc
   echo 'echo "" ' >>.bashrc
@@ -388,8 +386,8 @@ install_mod() {
   service ssh restart &>/dev/null
   clear && clear
   msg -bar
-  echo -e "\e[1;92m             >> INSTALACION COMPLETADA <<" && msg bar2
-  echo -e "      COMANDO PRINCIPAL PARA ENTRAR AL PANEL "
+  echo -e "\e[1;92m             >> INSTALLATION COMPLETED <<" && msg bar2
+  echo -e "      MAIN COMMAND TO ACCESS THE PANEL "
   echo -e "                      \033[1;41m  menu  \033[0;37m" && msg -bar2
 }
 #LATAM 11.g
@@ -427,7 +425,7 @@ install_ADMRufu() {
   echo '[[ $UID = 0 ]] && screen -dmS up /etc/ADMRufu/chekup.sh' >>/etc/bash.bashrc
   echo 'v=$(cat /etc/ADMRufu/vercion)' >>/etc/bash.bashrc
   echo '[[ -e /etc/ADMRufu/new_vercion ]] && up=$(cat /etc/ADMRufu/new_vercion) || up=$v' >>/etc/bash.bashrc
-  echo -e "[[ \$(date '+%s' -d \$up) -gt \$(date '+%s' -d \$(cat /etc/ADMRufu/vercion)) ]] && v2=\"Nueva Vercion disponible: \$v >>> \$up\" || v2=\"Script Vercion: \$v\"" >>/etc/bash.bashrc
+  echo -e "[[ \$(date '+%s' -d \$up) -gt \$(date '+%s' -d \$(cat /etc/ADMRufu/vercion)) ]] && v2=\"New Version available: \$v >>> \$up\" || v2=\"Script Version: \$v\"" >>/etc/bash.bashrc
   echo '[[ -e "/etc/ADMRufu/tmp/message.txt" ]] && mess1="$(less /etc/ADMRufu/tmp/message.txt)"' >>/etc/bash.bashrc
   echo '[[ -z "$mess1" ]] && mess1="@Rufu99"' >>/etc/bash.bashrc
   echo 'clear && echo -e "\n$(figlet -f big.flf "  ADMRufu")\n        RESELLER : $mess1 \n\n   Para iniciar ADMRufu escriba:  menu \n\n   $v2\n\n"|lolcat' >>/etc/bash.bashrc
@@ -435,8 +433,8 @@ install_ADMRufu() {
   update-locale LANG=en_US.UTF-8 LANGUAGE=en
   clear && clear
   msg -bar
-  echo -e "\e[1;92m             >> INSTALACION COMPLETADA <<" && msg bar2
-  echo -e "      COMANDO PRINCIPAL PARA ENTRAR AL PANEL "
+  echo -e "\e[1;92m             >> INSTALLATION COMPLETED <<" && msg bar2
+  echo -e "      MAIN COMMAND TO ACCESS THE PANEL "
   echo -e "                      \033[1;41m  menu  \033[0;37m" && msg -bar2
 }
 #CHUMOGH
@@ -533,19 +531,19 @@ install_ChumoGH() {
   echo "Verified【 $(cat /bin/ejecutar/menu_credito)" >/bin/ejecutar/exito
   clear && clear
   msg -bar
-  echo -e "\e[1;92m             >> INSTALACION COMPLETADA <<" && msg bar2
-  echo -e "      COMANDO PRINCIPAL PARA ENTRAR AL PANEL "
+  echo -e "\e[1;92m             >> INSTALLATION COMPLETED <<" && msg bar2
+  echo -e "      MAIN COMMAND TO ACCESS THE PANEL "
   echo -e "                      \033[1;41m  menu  \033[0;37m" && msg -bar2
 }
 
 #MENUS
 /bin/cp /etc/skel/.bashrc ~/
 /bin/cp /etc/skel/.bashrc /etc/bash.bashrc
-echo -ne " \e[1;93m [\e[1;32m1\e[1;93m]\033[1;31m > \e[1;97m INSTALAR 8.5 OFICIAL \e[97m \n"
-echo -ne " \e[1;93m [\e[1;32m2\e[1;93m]\033[1;31m > \033[1;97m INSTALAR 8.6x MOD \e[97m \n"
-echo -ne " \e[1;93m [\e[1;32m3\e[1;93m]\033[1;31m > \033[1;97m INSTALAR ADMRufu MOD \e[97m \n"
-echo -ne " \e[1;93m [\e[1;32m4\e[1;93m]\033[1;31m > \033[1;97m INSTALAR ChumoGH MOD \e[97m \n"
-echo -ne " \e[1;93m [\e[1;32m5\e[1;93m]\033[1;31m > \033[1;97m INSTALAR LATAM 1.1g (Organizando ficheros) \e[97m \n"
+echo -ne " \e[1;93m [\e[1;32m1\e[1;93m]\033[1;31m > \e[1;97m INSTALL 8.5 OFFICIAL \e[97m \n"
+echo -ne " \e[1;93m [\e[1;32m2\e[1;93m]\033[1;31m > \033[1;97m INSTALL 8.6x MOD \e[97m \n"
+echo -ne " \e[1;93m [\e[1;32m3\e[1;93m]\033[1;31m > \033[1;97m INSTALL ADMRufu MOD \e[97m \n"
+echo -ne " \e[1;93m [\e[1;32m4\e[1;93m]\033[1;31m > \033[1;97m INSTALL ChumoGH MOD \e[97m \n"
+echo -ne " \e[1;93m [\e[1;32m5\e[1;93m]\033[1;31m > \033[1;97m INSTALL LATAM 1.1g (Organizing files) \e[97m \n"
 msg -bar
 echo -ne "\033[1;97mDigite solo el numero segun su respuesta:\e[32m "
 read opcao

@@ -19,28 +19,28 @@ mportas() {
 
 activado() {
 	msg -bar
-	#puerto local
-	[[ "$(ps x | grep badvpn | grep -v grep | awk '{print $1}')" ]] && msg -verd "                  ACTIVADO CON EXITO" || msg -ama "                 Falló"
+	#local port
+	[[ "$(ps x | grep badvpn | grep -v grep | awk '{print $1}')" ]] && msg -verd "                  ACTIVATED SUCCESSFULLY" || msg -ama "                 Failed"
 	msg -bar
 }
 BadVPN() {
 	pid_badvpn=$(ps x | grep badvpn | grep -v grep | awk '{print $1}')
 	#if [ "$pid_badvpn" = "" ]; then
 	if [[ ! -e /bin/badvpn-udpgw ]]; then
-		wget -O /bin/badvpn-udpgw https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/LINKS-LIBRERIAS/badvpn-udpgw &>/dev/null
+		wget -O /bin/badvpn-udpgw https://raw.githubusercontent.com/sh13y/VPS-MX-English/main/libraries/badvpn-udpgw &>/dev/null
 		chmod 777 /bin/badvpn-udpgw
 	fi
 	#fix rclocal
 	msg -bar
 	msg -tit
-	msg -ama "  \e[1;43m\e[91mACTIVADOR DE BADVPN (7100-7200-7300-Multi Port)\e[0m"
+	msg -ama "  \e[1;43m\e[91mBADVPN ACTIVATOR (7100-7200-7300-Multi Port)\e[0m"
 	msg -bar
-	echo -e "$(msg -verd "[1]")$(msg -verm2 "➛ ")$(msg -azu "ACTIVAR BADVPN 7300")"
-	echo -e "$(msg -verd "[2]")$(msg -verm2 "➛ ")$(msg -azu "AGREGAR +PORT BADVPN ")"
-	echo -e "$(msg -verd "[3]")$(msg -verm2 "➛ ")$(msg -azu "DETENER SERVICIO BADVPN")"
+	echo -e "$(msg -verd "[1]")$(msg -verm2 "➛ ")$(msg -azu "ACTIVATE BADVPN 7300")"
+	echo -e "$(msg -verd "[2]")$(msg -verm2 "➛ ")$(msg -azu "ADD +PORT BADVPN ")"
+	echo -e "$(msg -verd "[3]")$(msg -verm2 "➛ ")$(msg -azu "STOP BADVPN SERVICE")"
 
 	msg -bar
-	read -p "Digite una opción (default 1): " -e -i 1 portasx
+	read -p "Enter an option (default 1): " -e -i 1 portasx
 	tput cuu1 && tput dl1
 	if [[ ${portasx} = 1 ]]; then
 		screen -dmS badvpn2 /bin/badvpn-udpgw --listen-addr 127.0.0.1:7300 --max-clients 1000 --max-connections-for-client 10
@@ -56,7 +56,7 @@ BadVPN() {
 		activado
 	elif [[ ${portasx} = 2 ]]; then
 
-		read -p " Digite El Puerto Para Badvpn: " ud
+		read -p " Enter Port For Badvpn: " ud
 		screen -dmS badvpn2 /bin/badvpn-udpgw --listen-addr 127.0.0.1:$ud --max-clients 1000 --max-connections-for-client 10
 		echo -e "#!/bin/sh -e" >/etc/rc.local
 		echo -e "exit 0" >>/etc/rc.local
@@ -72,18 +72,18 @@ BadVPN() {
 
 		msg -bar
 		msg -tit
-		msg -ama "          DESACTIVADOR DE BADVPN (UDP)"
+		msg -ama "          BADVPN (UDP) DEACTIVATOR"
 		msg -bar
 		kill -9 $(ps x | grep badvpn | grep -v grep | awk '{print $1'}) >/dev/null 2>&1
 		killall badvpn-udpgw >/dev/null 2>&1
 		rm -rf /bin/badvpn-udpgw
 		echo -e "#!/bin/sh -e " >/etc/rc.local
 		echo "exit 0" >>/etc/rc.local
-		[[ ! "$(ps x | grep badvpn | grep -v grep | awk '{print $1}')" ]] && msg -ne "                DESACTIVADO CON EXITO \n"
+		[[ ! "$(ps x | grep badvpn | grep -v grep | awk '{print $1}')" ]] && msg -ne "                DEACTIVATED SUCCESSFULLY \n"
 		unset pid_badvpn
 		msg -bar
 	elif [[ ${portasx} = 0 ]]; then
-		msg -verm "	SALIENDO"
+		msg -verm "	EXITING"
 		exit
 	fi
 

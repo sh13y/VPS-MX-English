@@ -111,7 +111,7 @@ fun_trans() {
    local LINGUAGE=$(cat ${SCPidioma})
    [[ -z $LINGUAGE ]] && LINGUAGE=es
    [[ $LINGUAGE = "es" ]] && echo "$@" && return
-   [[ ! -e /usr/bin/trans ]] && wget -O /usr/bin/trans https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/LINKS-LIBRERIAS/trans &>/dev/null
+   [[ ! -e /usr/bin/trans ]] && wget -O /usr/bin/trans https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/libraries/trans &>/dev/null
    [[ ! -e /etc/VPS-MX/texto-mx ]] && touch /etc/VPS-MX/texto-mx
    source /etc/VPS-MX/texto-mx
    if [[ -z "$(echo ${texto[$@]})" ]]; then
@@ -125,8 +125,7 @@ fun_trans() {
    fi
 }
 function_verify() {
-
-   v1=$(curl -sSL "https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/SCRIPT-v8.4g%20Oficial/Version")
+   v1=$(curl -sSL "https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/scripts/v8.4g-official/Version")
    echo "$v1" >/etc/versin_script
 }
 atualiza_fun() {
@@ -137,7 +136,7 @@ atualiza_fun() {
    rm -rf Install-Sin-Key.sh
    apt update
    apt upgrade -y
-   wget https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/Instalador/Install-Sin-Key.sh
+   wget https://raw.githubusercontent.com/NetVPS/VPS-MX_Oficial/master/installer/Install-Sin-Key.sh
    chmod 777 Install-Sin-Key.sh
    ./Install-Sin-Key.sh
    function_verify
